@@ -8,6 +8,7 @@ package clientesopaletras;
 
 import javax.swing.JFrame;
 import mx.equipoMaravilla.examen2.view.SopaLetras;
+import servidor.Tablero;
 
 /**
  *
@@ -18,6 +19,9 @@ public class ClienteSopaLetras {
     /**
      * @param args the command line arguments
      */
+    
+    static Tablero tab = null;
+    
     public static void main(String[] args) {
         String []contenido = {"asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert"};
         JFrame a = new JFrame();
@@ -26,6 +30,12 @@ public class ClienteSopaLetras {
         a.setSize(600, 600);
         a.show();
         // TODO code application logic here
+        
+        //CODIGO RODO
+        int filas=10;
+        int columnas=10;
+        tab = new Tablero(filas,columnas);
+        //CODIGO RODO
     }
     
 }
