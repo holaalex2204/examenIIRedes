@@ -1,11 +1,15 @@
 # netbeans
 ClienteSopaLetras/nbproject/private/
+ClienteSopaLetras/nbproject/
 ClienteSopaLetras/build/
 ClienteSopaLetras/nbbuild/
 ClienteSopaLetras/dist/
 ClienteSopaLetras/nbdist/
 ClienteSopaLetras/nbactions.xml
 ClienteSopaLetras/nb-configuration.xml
+ClienteSopaLetras/build.xml
+ClienteSopaLetras/manifest.mClienteSopaLetras/build.xml
+ClienteSopaLetras/manifest.mf
 #Archivos Binarios
 *.class
 #Archivos Binarios
