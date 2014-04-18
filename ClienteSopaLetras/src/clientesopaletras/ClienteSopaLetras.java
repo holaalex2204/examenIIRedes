@@ -9,6 +9,7 @@ package clientesopaletras;
 import javax.swing.JFrame;
 import mx.equipoMaravilla.examen2.view.SopaLetras;
 import servidor.Tablero;
+import logica.ManejoArchivos;
 
 /**
  *
@@ -21,6 +22,7 @@ public class ClienteSopaLetras {
      */
     
     static Tablero tab = null;
+    static ManejoArchivos archivo = null;
     
     public static void main(String[] args) {
         String []contenido = {"asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert"};
@@ -35,6 +37,8 @@ public class ClienteSopaLetras {
         int filas=10;
         int columnas=10;
         tab = new Tablero(filas,columnas);
+        System.out.println(System.getProperty("user.dir"));
+        archivo = new ManejoArchivos();
         //CODIGO RODO
     }
     

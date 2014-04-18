@@ -1,0 +1,5 @@
+casa
+hola
+rodo
+laptop
+reloj
