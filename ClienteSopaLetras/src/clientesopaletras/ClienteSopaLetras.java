@@ -7,7 +7,7 @@
 package clientesopaletras;
 
 import javax.swing.JFrame;
-import mx.equipoMaravilla.examen2.view.SopaLetras;
+import mx.equipoMaravilla.examen2.client.view.SopaLetras;
 import servidor.Tablero;
 import logica.ManejoArchivos;
 
@@ -26,13 +26,13 @@ public class ClienteSopaLetras {
     
     public static void main(String[] args) {
         String []contenido = {"asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert"};
+        String []palabras = {"hola","holas","hola","holas"};
         JFrame a = new JFrame();
         a.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        a.add(new SopaLetras(contenido));
+        a.add(new SopaLetras(contenido,palabras));
         a.setSize(600, 600);
-        a.show();
-        // TODO code application logic here
-        
+        a.show();        
+                
         //CODIGO RODO
         int filas=10;
         int columnas=10;

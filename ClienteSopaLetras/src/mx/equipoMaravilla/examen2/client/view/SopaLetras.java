@@ -4,9 +4,11 @@
  * and open the template in the editor.
  */
 
-package mx.equipoMaravilla.examen2.view;
+package mx.equipoMaravilla.examen2.client.view;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridLayout;
 import javax.swing.JLabel;
@@ -17,14 +19,16 @@ import javax.swing.JPanel;
  * @author holaalex2204
  */
 public class SopaLetras extends JPanel {
-    public SopaLetras(String contenido[])
-    {
+    public SopaLetras(String contenido[], String palabras[])
+    {        
+        //Inicializa el panel que contiene la sopa de letras
+        JPanel sopa = new JPanel();        
         Font fuente = new Font(Font.SANS_SERIF,Font.ITALIC,18);
-        setBackground(Color.white);
+        sopa.setBackground(Color.white);
         GridLayout grid =new GridLayout(0,15);
         grid.setHgap(10);
         grid.setVgap(10);
-        setLayout(grid);
+        sopa.setLayout(grid);
         if(contenido.length!=15)    return;
         for(int fila = 0 ; fila<15;fila++)
         {
@@ -35,8 +39,23 @@ public class SopaLetras extends JPanel {
                 aux.setBackground(new Color(80,189,254));
                 aux.setOpaque(true);
                 aux.setFont(fuente);
-                add(aux);
+                sopa.add(aux);
             }
         }
+        //Inicializa el panel que contiene las palabras a buscar
+        JPanel panelPalabras = new JPanel();            
+        panelPalabras.setLayout(new GridLayout(0,3));
+        for(int i = 0 ; i<palabras.length;i++)
+        {            
+            JLabel aux = new JLabel(palabras[i],JLabel.LEFT);
+            aux.setFont(fuente);
+            panelPalabras.add(aux);
+        }
+        //Inicializa el panel principal que contiene todo
+        BorderLayout border = new BorderLayout();        
+        setLayout(border);                
+        //sopa.setSize(500, 500);
+        add(sopa,BorderLayout.CENTER);
+        add(panelPalabras,BorderLayout.NORTH);
     }
 }
