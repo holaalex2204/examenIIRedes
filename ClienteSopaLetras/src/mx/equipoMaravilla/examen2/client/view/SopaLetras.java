@@ -118,8 +118,7 @@ public class SopaLetras extends JPanel {
         for(int i = 0 ; i<palabras.length;i++)
         {
             if(palabra.compareTo(palabras[i])==0 && encontrados[i]==0)
-            {
-                //TIENE QUE AVISAR AL SERVIDOR QUE HA ENCONTRADO UNA PALABRA
+            {                
                 for(int fila =0; fila<15; fila++)
                 {
                     for(int col = 0 ; col<15; col++)
@@ -129,8 +128,7 @@ public class SopaLetras extends JPanel {
                             if(f==-1)   f= fila;
                             if(c==-1)   c= col;
                             filas = filas + fila;
-                            cols = cols + col;
-                           //sopita[fila][col].setBackground(Color.green);
+                            cols = cols + col;                           
                         }
                     }
                 }                
@@ -139,12 +137,8 @@ public class SopaLetras extends JPanel {
                 filas = filas +1;
                 cols = cols+1;
                 f++;
-                c++;
-                System.out.println(filas);
-                System.out.println(f);
-                System.out.println(cols);
-                System.out.println(c);
-                if(!((filas == f | cols==c)|(filas-f)==(cols-c)))
+                c++;                
+                if(!(((filas == f  && (cols-c)==((float)palabra.length()-1)/2)| (cols==c && (filas-f)==((float)palabra.length()-1)/2))|(filas-f)==(cols-c)))
                 {
                     break;
                 }
@@ -158,6 +152,7 @@ public class SopaLetras extends JPanel {
                         }
                     }
                 }    
+                //AQUI TIENES QUE AVISAR QUE YA ENCONTRO UNA PALABRA
                 return;
             }
         }
