@@ -25,8 +25,8 @@ public class ClienteSopaLetras {
     static ManejoArchivos archivo = null;
     
     public static void main(String[] args) {
-        String []contenido = {"asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñqwert"};
-        String []palabras = {"hola","holas","hola","holas"};
+        String []contenido = {"acasahjklñqwert","asdfghjklñqwert","asdfgholañqwerp","asdfghjklñqwero","asdfghjklñqwert","asdfgrodoñqwerp","asdfghjklñqwera","asdfghjklñqwerl","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñrwert","asdfghjklñqeert","asdfghjklñqwlrt","asdfghjklñqweot","asdfghjklñqwerj"};
+        String []palabras = {"casa","hola","rodo","laptop","reloj"};
         JFrame a = new JFrame();
         a.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         a.add(new SopaLetras(contenido,palabras));
