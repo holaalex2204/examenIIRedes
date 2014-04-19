@@ -39,7 +39,9 @@ public class ClienteSopaLetras {
         tab = new Tablero(filas,columnas);
         System.out.println(System.getProperty("user.dir"));
         archivo = new ManejoArchivos();
-        //CODIGO RODO
+        //CODIGO RODO2
+        //pág. relacionado con control de versiones y Netbeans:
+        //https://netbeans.org/kb/74/java/import-eclipse_es.html
     }
     
 }
