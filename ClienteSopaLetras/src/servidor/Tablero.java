@@ -14,11 +14,17 @@ import java.util.ArrayList;
  */
 public class Tablero {
 
-    static Casilla Matriz [][];
+    public static Casilla Matriz [][];
+    public static String cadenaR[] = null;
+    
    
     public Tablero(int alto, int ancho){
         
         Matriz = new Casilla[alto+2][ancho+2];
+        cadenaR = new String[alto];
+        //Limpiar el arreglo en cadenas vacías
+        for (int x=0 ;x < cadenaR.length; x++)
+            cadenaR[x] = "";
 
         int i,j;
         //Inicializar todo el tablero con tipo Casilla
@@ -43,6 +49,8 @@ public class Tablero {
                 car = caracteres.substring(xAscii,xAscii+1);
                 //System.out.println(car);
                 Matriz[i+1][j+1].valor = car;
+                //para colocar matriz en arreglo
+                cadenaR[i] += car;
             }
         }
         //Llenando de letras del abecedario aleatoriamente
@@ -57,9 +65,7 @@ public class Tablero {
             System.out.println();
         }
         //COMPROBAR
-       
-        
-        
+   
 }//constructor Tablero
 }
 

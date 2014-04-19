@@ -35,5 +35,13 @@ public class Casilla implements java.io.Serializable{
     public void setCol(int col) {
         this.col = col;
     }
+
+    public String getValor() {
+        return valor;
+    }
+
+    public void setValor(String valor) {
+        this.valor = valor;
+    }
     
 }

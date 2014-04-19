@@ -1,5 +1,6 @@
-casa
-hola
-rodo
-laptop
-reloj
+PALABRAS
+DE
+ARCHIVO
+TXT
+IMPLEMENTADO
+A
