@@ -11,7 +11,8 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-
+import java.io.RandomAccessFile;
+import java.util.Scanner;
 /**
  *
  * @author ramrodo
@@ -19,8 +20,15 @@ import java.io.InputStreamReader;
 public class ManejoArchivos {
     
     
+    public static String palabrasR[] = null;
+    
     public ManejoArchivos(){
-        //String []Palabras = {""};
+        
+        //Tamaño MAX de palabras en el archivo = 20
+        String palabrasT[] = new String[20];
+        
+        int x=0, t=0;
+        
         String strLinea;
         try{
             // Abrimos el archivo
@@ -30,16 +38,24 @@ public class ManejoArchivos {
             DataInputStream entrada = new DataInputStream(fstream);
             // Creamos el Buffer de Lectura
             BufferedReader buffer = new BufferedReader(new InputStreamReader(entrada));
+                
             
             while ((strLinea = buffer.readLine()) != null)   {
                 System.out.println(strLinea);
+                palabrasT[x]=strLinea;
+                x++;
             }
+           
+            //Formando el array que contiene SOLO las palabras del archivo
+            palabrasR = new String[x];
+            for(int y=0; y<x; y++)
+                palabrasR[y]=palabrasT[y];
             
         }catch(Exception e){
             e.printStackTrace();
         }
         
-        //return Palabras;
+        
     }
     
     

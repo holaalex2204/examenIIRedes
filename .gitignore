@@ -11,5 +11,3 @@ ClienteSopaLetras/manifest.mClienteSopaLetras/build.xml
 ClienteSopaLetras/manifest.mf
 #Archivos Binarios
 *.class
-#Archivos Binarios
-*.class
