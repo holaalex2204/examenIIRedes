@@ -7,7 +7,10 @@
 package logica;
 
 import java.util.ArrayList;
-
+import static servidor.Tablero.Matriz;
+import static clientesopaletras.ClienteSopaLetras.nfilas;
+import static clientesopaletras.ClienteSopaLetras.ncolumnas;
+import static logica.ManejoArchivos.palabrasR;
 /**
  *
  * @author ramrodo
@@ -15,12 +18,57 @@ import java.util.ArrayList;
 public class ColocarPalabra {
     
     static ArrayList<String> MEMORIA=new ArrayList<String>();
+    //MEMORIA.add(new String(i+","+j));
+    private int[][] pos;
+    
+    public ColocarPalabra(){
+    pos = new int[1][2];
+}//constructor
     
     public void Abajo(){
     //Método para colocar una palabra hacia Abajo
+        xyPalabra();
+    }
+    
+    
+    public boolean seSobrepone(int xfila, int xcolumna){
+        
+        return false;
+    }
+    
+    public void setLetra(int xfila, int xcolumna, char c) {
         
     }
     
+    public int[][] xyPalabra() {
+        //Min + (int)(Math.random() * ((Max - Min) + 1))
+        //private int[][] pos;
+        //pos = new int[1][2];
+        int[][] auxpos;
+        auxpos = new int[1][2];
+        
+        for (int z=0; z<=palabrasR.length; z++){
+            
+            int xx = 1 + (int)(Math.random() * ((nfilas - 1) + 1));
+            int yy = 1 + (int)(Math.random() * ((ncolumnas - 1) + 1));
+            
+            int tam = palabrasR[z].length();
+            
+            /*AQUI FALTA DEPENDE DE CADA MÉTODO
+                - ERROR: Argumento en éste método para saber cómo se colocará la palabra
+            */
+                
+            
+        }
+        
+        
+        
+        
+        
+        
+        
+        return auxpos;
+    }
     
     
     
@@ -38,6 +86,6 @@ public class ColocarPalabra {
         }//for
         return false;
     }//esta_en_memoria
-    
+    //MEMORIA.add(new String(i+","+j));
     
 }//class

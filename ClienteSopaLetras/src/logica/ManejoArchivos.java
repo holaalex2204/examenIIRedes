@@ -41,7 +41,7 @@ public class ManejoArchivos {
                 
             
             while ((strLinea = buffer.readLine()) != null)   {
-                System.out.println(strLinea);
+                //System.out.println(strLinea);
                 palabrasT[x]=strLinea;
                 x++;
             }

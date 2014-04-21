@@ -10,7 +10,6 @@ import javax.swing.JFrame;
 import mx.equipoMaravilla.examen2.client.view.SopaLetras;
 import servidor.Tablero;
 import logica.ManejoArchivos;
-import static servidor.Tablero.Matriz;
 import static servidor.Tablero.cadenaR;
 import static logica.ManejoArchivos.palabrasR;
 
@@ -26,16 +25,19 @@ public class ClienteSopaLetras {
     
     static Tablero tab = null;
     static ManejoArchivos archivo = null;
+    public static int nfilas;
+    public static int ncolumnas;
     
     public static void main(String[] args) {
         
         
         //CODIGO RODO***********************************************************
         //System.out.println(System.getProperty("user.dir"));
-        int filas=15;
-        int columnas=15;
-        tab = new Tablero(filas,columnas);
-        archivo = new ManejoArchivos();
+        ncolumnas = 15;
+        nfilas = 15;
+        tab = new Tablero(nfilas,ncolumnas);
+        tab.llenarTablero(nfilas,ncolumnas);
+        archivo = new ManejoArchivos();//palabrasR static
         //CODIGO RODO***********************************************************
         
         

@@ -35,16 +35,29 @@ public class Tablero {
                 Matriz[i][j].col = j;       
                 Matriz[i][j].valor = "-";
             }
-        }
+        } 
         
+        //COMPROBAR
+        System.out.println("TABLERO: ");
+        for(i=0;i<=(alto+1);i++){
+            for(j=0;j<=(ancho+1);j++){          
+                System.out.print(Matriz[i][j].getFila() + "," + Matriz[i][j].getCol() + "=" + Matriz[i][j].valor+"\t");
+            }
+            System.out.println();
+        }
+        //COMPROBAR
+   
+}//constructor Tablero
+    
+    public void llenarTablero(int alto, int ancho) {
         
         //Llenando de letras del abecedario aleatoriamente
         String caracteres = new String("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         int xAscii;
         int filas = alto, columnas = ancho;
         String car;
-        for(i = 0; i < filas; i++){
-            for(j = 0; j < columnas; j++){
+        for(int i = 0; i < filas; i++){
+            for(int j = 0; j < columnas; j++){
                 xAscii = (int)(Math.random()* caracteres.length());
                 car = caracteres.substring(xAscii,xAscii+1);
                 //System.out.println(car);
@@ -58,14 +71,14 @@ public class Tablero {
         
         //COMPROBAR
         System.out.println("TABLERO: ");
-        for(i=0;i<=(alto+1);i++){
-            for(j=0;j<=(ancho+1);j++){          
+        for(int i=0;i<=(alto+1);i++){
+            for(int j=0;j<=(ancho+1);j++){          
                 System.out.print(Matriz[i][j].getFila() + "," + Matriz[i][j].getCol() + "=" + Matriz[i][j].valor+"\t");
             }
             System.out.println();
         }
         //COMPROBAR
-   
-}//constructor Tablero
+}//metodo llenarTablero()
+    
 }
 
