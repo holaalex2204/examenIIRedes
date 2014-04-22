@@ -61,9 +61,15 @@ public class Tablero {
                 xAscii = (int)(Math.random()* caracteres.length());
                 car = caracteres.substring(xAscii,xAscii+1);
                 //System.out.println(car);
-                Matriz[i+1][j+1].valor = car;
-                //para colocar matriz en arreglo
-                cadenaR[i] += car;
+                if(Matriz[i+1][j+1].valor.equals("-")){
+                    Matriz[i+1][j+1].valor = car;
+                    //para colocar matriz en arreglo
+                    cadenaR[i] += car;
+                }else{
+                    cadenaR[i] += Matriz[i+1][j+1].getValor();
+                }
+                
+                
             }
         }
         //Llenando de letras del abecedario aleatoriamente

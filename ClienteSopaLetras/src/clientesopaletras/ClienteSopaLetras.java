@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import mx.equipoMaravilla.examen2.client.view.SopaLetras;
 import servidor.Tablero;
 import logica.ManejoArchivos;
+import logica.ColocarPalabra;
 import static servidor.Tablero.cadenaR;
 import static logica.ManejoArchivos.palabrasR;
 
@@ -27,6 +28,7 @@ public class ClienteSopaLetras {
     static ManejoArchivos archivo = null;
     public static int nfilas;
     public static int ncolumnas;
+    static ColocarPalabra colocar = null;
     
     public static void main(String[] args) {
         
@@ -36,8 +38,11 @@ public class ClienteSopaLetras {
         ncolumnas = 15;
         nfilas = 15;
         tab = new Tablero(nfilas,ncolumnas);
-        tab.llenarTablero(nfilas,ncolumnas);
+        
         archivo = new ManejoArchivos();//palabrasR static
+        colocar = new ColocarPalabra();
+        
+        tab.llenarTablero(nfilas,ncolumnas);
         //CODIGO RODO***********************************************************
         
         
