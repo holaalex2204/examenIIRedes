@@ -117,7 +117,7 @@ public class SopaLetras extends JPanel {
         System.out.println(palabra);
         for(int i = 0 ; i<palabras.length;i++)
         {
-            if(palabra.compareTo(palabras[i])==0 && encontrados[i]==0)
+            if((palabra.compareTo(palabras[i])==0 && encontrados[i]==0) |(new StringBuilder(palabra).reverse().toString().compareTo(palabras[i])==0 && encontrados[i]==0))
             {                
                 for(int fila =0; fila<15; fila++)
                 {
@@ -137,8 +137,21 @@ public class SopaLetras extends JPanel {
                 filas = filas +1;
                 cols = cols+1;
                 f++;
-                c++;                
-                if(!(((filas == f  && (cols-c)==((float)palabra.length()-1)/2)| (cols==c && (filas-f)==((float)palabra.length()-1)/2))|(filas-f)==(cols-c)))
+                c++;      
+                /*System.out.println(filas);
+                System.out.println(f);
+                System.out.println(cols-c);
+                System.out.println(((float)palabra.length()-1)/2);
+                System.out.println();
+                System.out.println(cols);
+                System.out.println(c);
+                System.out.println(filas-f);
+                System.out.println(((float)palabra.length()-1)/2);
+                System.out.println();
+                System.out.println(filas-f);
+                System.out.println(cols-c);
+                        */
+                if(!(((filas == f  && (cols-c)==((float)palabra.length()-1)/2)| (cols==c && (filas-f)==((float)palabra.length()-1)/2))|(Math.abs(filas-f))==Math.abs(cols-c)))
                 {
                     break;
                 }
