@@ -7,6 +7,7 @@
 package servidor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -37,7 +38,7 @@ public class Tablero {
             }
         } 
         
-        //COMPROBAR
+        /*//COMPROBAR
         System.out.println("TABLERO: ");
         for(i=0;i<=(alto+1);i++){
             for(j=0;j<=(ancho+1);j++){          
@@ -45,7 +46,7 @@ public class Tablero {
             }
             System.out.println();
         }
-        //COMPROBAR
+        //COMPROBAR*/
    
 }//constructor Tablero
     
@@ -74,8 +75,9 @@ public class Tablero {
         }
         //Llenando de letras del abecedario aleatoriamente
         
+        //System.out.println("SOPA DE LETRAS en el arreglo cadenaR -> " + Arrays.deepToString(cadenaR));        
         
-        //COMPROBAR
+        /*//COMPROBAR
         System.out.println("TABLERO: ");
         for(int i=0;i<=(alto+1);i++){
             for(int j=0;j<=(ancho+1);j++){          
@@ -83,7 +85,9 @@ public class Tablero {
             }
             System.out.println();
         }
-        //COMPROBAR
+        //COMPROBAR*/
+        
+        
 }//metodo llenarTablero()
     
 }

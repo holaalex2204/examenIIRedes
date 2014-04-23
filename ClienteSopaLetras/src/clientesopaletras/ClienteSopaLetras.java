@@ -6,6 +6,7 @@
 
 package clientesopaletras;
 
+import java.util.Arrays;
 import javax.swing.JFrame;
 import mx.equipoMaravilla.examen2.client.view.SopaLetras;
 import servidor.Tablero;
@@ -13,6 +14,7 @@ import logica.ManejoArchivos;
 import logica.ColocarPalabra;
 import static servidor.Tablero.cadenaR;
 import static logica.ManejoArchivos.palabrasR;
+import static servidor.Tablero.cadenaR;
 
 /**
  *
@@ -43,6 +45,9 @@ public class ClienteSopaLetras {
         colocar = new ColocarPalabra();
         
         tab.llenarTablero(nfilas,ncolumnas);
+        
+        System.out.println("SOPA DE LETRAS en el arreglo cadenaR -> " + Arrays.toString(cadenaR));
+        //System.out.println("SOPA DE LETRAS en el arreglo cadenaR -> " + Arrays.deepToString(cadenaR));
         //CODIGO RODO***********************************************************
         
         

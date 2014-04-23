@@ -289,7 +289,7 @@ public class ColocarPalabra {
 
         }//for
         
-        System.out.println("MEMORIA FINAL (Contiene las palabras, coordenadas -> " + MEMORIA);
+        //System.out.println("MEMORIA FINAL (Contiene las palabras, coordenadas -> " + MEMORIA);
         
     }//xyPalabra()
     
