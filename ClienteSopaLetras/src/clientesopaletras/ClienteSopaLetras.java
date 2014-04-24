@@ -6,14 +6,18 @@
 
 package clientesopaletras;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.Socket;
 import java.util.Arrays;
+import java.util.Scanner;
 import javax.swing.JFrame;
+import logica.ColocarPalabra;
+import logica.ManejoArchivos;
+import static logica.ManejoArchivos.palabrasR;
 import mx.equipoMaravilla.examen2.client.view.SopaLetras;
 import servidor.Tablero;
-import logica.ManejoArchivos;
-import logica.ColocarPalabra;
-import static servidor.Tablero.cadenaR;
-import static logica.ManejoArchivos.palabrasR;
 import static servidor.Tablero.cadenaR;
 
 /**
@@ -33,6 +37,23 @@ public class ClienteSopaLetras {
     static ColocarPalabra colocar = null;
     
     public static void main(String[] args) {
+        
+        try{
+        Socket cl;
+        cl = new Socket("localhost", 5000);
+        cl.setSoLinger(true, 1000);
+        cl.setReuseAddress(true);
+        System.out.println("Conectado");
+            
+            
+        String inputStreamString = new Scanner(cl.getInputStream(),"UTF-8").useDelimiter("\\A").next();
+        System.out.println(inputStreamString);
+        
+            //System.out.println("RECIBIDO: " + inputStreamString);
+        //System.out.println("RECIBIDO: " + inputStringBuilder.toString());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         
         
         //CODIGO RODO***********************************************************

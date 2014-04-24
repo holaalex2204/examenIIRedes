@@ -14,10 +14,6 @@ public class Casilla implements java.io.Serializable{
     int fila;
     int col;
     String valor;
-    boolean edo;/*
-    true = casilla no ocupada por una letra
-    false = NO USARSE. Ocupada.
-    */
 
     public Casilla(int fila, int col, String tipo) {
         this.fila = fila;
@@ -46,14 +42,6 @@ public class Casilla implements java.io.Serializable{
 
     public void setValor(String valor) {
         this.valor = valor;
-    }
-
-    public boolean isEdo() {
-        return edo;
-    }
-
-    public void setEdo(boolean edo) {
-        this.edo = edo;
     }
     
 }
