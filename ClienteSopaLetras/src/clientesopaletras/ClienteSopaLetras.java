@@ -9,6 +9,7 @@ package clientesopaletras;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -17,6 +18,7 @@ import logica.ColocarPalabra;
 import logica.ManejoArchivos;
 import static logica.ManejoArchivos.palabrasR;
 import mx.equipoMaravilla.examen2.client.view.SopaLetras;
+import servidor.Conexion;
 import servidor.Tablero;
 import static servidor.Tablero.cadenaR;
 
@@ -35,19 +37,26 @@ public class ClienteSopaLetras {
     public static int nfilas;
     public static int ncolumnas;
     static ColocarPalabra colocar = null;
+    static Conexion conn = null;
     
     public static void main(String[] args) {
         
         try{
+            conn = new Conexion();
+            
         Socket cl;
-        cl = new Socket("localhost", 5000);
+        cl = new Socket("localhost", 6000);
         cl.setSoLinger(true, 1000);
         cl.setReuseAddress(true);
         System.out.println("Conectado");
             
             
-        String inputStreamString = new Scanner(cl.getInputStream(),"UTF-8").useDelimiter("\\A").next();
-        System.out.println(inputStreamString);
+        //String inputStreamString = new Scanner(cl.getInputStream(),"UTF-8").useDelimiter("\\A").next();
+        //System.out.println(inputStreamString);
+        /*ObjectInputStream ois = new ObjectInputStream(cl.getInputStream());
+        String c = (String)ois.readObject();
+        System.out.println("RECIBIDO: " + c);*/
+        System.out.println("RECIBIDO: " + conn.recibir());
         
             //System.out.println("RECIBIDO: " + inputStreamString);
         //System.out.println("RECIBIDO: " + inputStringBuilder.toString());

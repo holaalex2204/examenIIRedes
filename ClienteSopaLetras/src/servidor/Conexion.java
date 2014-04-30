@@ -24,12 +24,14 @@ public class Conexion {
     
     public Conexion() {    
         try {
-            ss = new ServerSocket(5000);
+            ss = new ServerSocket(6000);
+            //cl = new Socket("localhost", 5000);
             //cl = ss.accept();  
             //System.out.println(cl.getInetAddress());
             //oos = new ObjectOutputStream(cl.getOutputStream());
             //ois = new ObjectInputStream(cl.getInputStream());  
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     
