@@ -19,12 +19,12 @@ import javax.swing.JPanel;
  *
  * @author holaalex2204
  */
-public class SopaLetras extends JPanel {
+public class SopaLetrasView extends JPanel {
     private String palabra = new String();
     private int encontrados[];
     private String palabras[];
     private JLabel[][] sopita;
-    public SopaLetras(String contenido[], String palabras[]) {
+    public SopaLetrasView(String contenido[], String palabras[]) {
         //Inicializa el panel que contiene la sopa de letras
         JPanel sopa = new JPanel();
         Font fuenteTitulo = new Font(Font.SANS_SERIF, Font.BOLD, 22);

@@ -16,7 +16,7 @@ import javax.swing.JFrame;
 import logica.ColocarPalabra;
 import logica.ManejoArchivos;
 import static logica.ManejoArchivos.palabrasR;
-import mx.equipoMaravilla.examen2.client.view.SopaLetras;
+import mx.equipoMaravilla.examen2.client.view.SopaLetrasView;
 import protocol.Mensaje;
 import servidor.Conexion;
 import servidor.Tablero;
@@ -59,7 +59,7 @@ public class ClienteSopaLetras {
 
          JFrame a = new JFrame();    //Crea unframe para mostrar la sopa de letras
          a.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-         a.add(new SopaLetras(cadenaR, palabrasR));//crea una sopa de letras con las palabras deseadas
+         a.add(new SopaLetrasView(cadenaR, palabrasR));//crea una sopa de letras con las palabras deseadas
          a.setSize(600, 600);//Define un tamaño al contendor de la sopa de letras
          a.show(); //muestra la sopa de letras
          */

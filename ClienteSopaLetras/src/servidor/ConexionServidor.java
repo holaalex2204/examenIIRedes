@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import protocol.Mensaje;
 import protocol.Reconexion;
+import protocol.SopaLetras;
 
 /**
  *
@@ -23,7 +24,7 @@ public class ConexionServidor {
     Socket cliente;
     ObjectInputStream entrada;
     ObjectOutputStream salida;
-    boolean edoEspera = true;
+    public static boolean edoEspera = true;
 
     public ConexionServidor(Socket cliente) {
         try {
@@ -54,18 +55,24 @@ public class ConexionServidor {
                         salida.writeObject(new Mensaje("Acepto", "Bienvenido"));
                         salida.flush();
                         System.out.println("Entrando a zona  de espera");
+                        //Comienza el periodo de espera
                         while (edoEspera == true) {
                             salida.writeObject(new Mensaje("Espera", aux + " cantidad de jugadores"));
                             salida.flush();
                             System.out.println("Envie un mensaje de espera");
                             aux++;
                             if (aux == 100) {
-                                edoEspera = false;
+                                edoEspera = false;                                
                             }
                         }
+                        //por alguna razon ya se tiene lista la sopa de letras y ya se puede comenzar a enviarla
                         salida.writeObject(new Mensaje("Informacion", "Sopa de letras"));
                         salida.flush();
-
+                        //Se supondra que ya se tiene una sopa de letras y para efectos practicos se deja una estática (desupés se hace el cambio)                        
+                        String []contenido = {"acasahjklñqwert","asdfghjklñqwert","asdfgholañqwerp","asdfghjklñqwero","asdfghjklñqwert","asdfgrodoñqwerp","asdfghjklñqwera","asdfghjklñqwerl","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñrwert","asdfghjklñqeert","asdfghjklñqwlrt","asdfghjklñqweot","asdfghjklñqwerj"};
+                        String []palabras = {"casa","hola","rodo","laptop","reloj"};
+                        salida.writeObject(new SopaLetras(palabras,contenido));
+                        salida.flush();
                     }
                 }
             } while (m.getTipo().compareTo("Bye") != 0);
