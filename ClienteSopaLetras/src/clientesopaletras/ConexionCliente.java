@@ -45,13 +45,40 @@ public class ConexionCliente {
                 else if(obj instanceof Reconexion) //No es posible comenzar en ese servidor, de modo que se asigna uno nuevo
                 {                    
                    rec = (Reconexion)obj;
+                   System.out.println(cliente.getLocalAddress() + ":" + rec.getIp() + "->");                   
+                   salida.writeObject(new Mensaje("Bye","Adios"));
+                   entrada.close();
+                   salida.close();
+                   cliente.close();
                 }
             }
             while (msj.getTipo().compareTo("Acepto")!=0);
-            salida.writeObject(new Mensaje("Bye","Adios"));
+            
         } catch (Exception ex) {
             ex.printStackTrace();
         }        
+    }
+    public void juega()
+    {
+        //Primero esperaremos hasta que el servidor nos diga que dejemos de esperar
+        //El servidor estará enviando constantemente mensajes de espera hasta que ya se pueda comenzar a jugar
+        Mensaje msj = new Mensaje("","");                
+        try {
+            do {
+                msj = (Mensaje)entrada.readObject();   
+                System.out.println(cliente.getLocalAddress() + ":" + msj.getTipo() + "->" + msj.getContenido());                   
+            }
+            while (msj.getTipo().compareTo("Espera")==0);            
+            if(msj.getTipo().equals("Informacion") && msj.getContenido().compareTo("Sopa de letras")==0)
+            {
+                System.out.println("Estoy listo para recibir la sopa de letras");
+                salida.writeObject(new Mensaje("Bye","Adios"));
+            }
+        }catch(Exception ev)
+        {
+            ev.printStackTrace();
+        }
+        
     }
     
 }

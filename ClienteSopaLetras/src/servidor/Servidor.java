@@ -36,6 +36,8 @@ public class Servidor {
         System.out.println("Esperando Petición");
         Socket cliente = servidor.accept();
         ConexionServidor con = new ConexionServidor(cliente);
+        con.rechaza();        
+        con = new ConexionServidor(servidor.accept());
         con.empieza();
     }
     /*ServerSocket server = null;

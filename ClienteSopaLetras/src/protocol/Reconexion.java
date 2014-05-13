@@ -10,7 +10,7 @@ package protocol;
  *
  * @author holaalex2204
  */
-public class Reconexion {
+public class Reconexion implements java.io.Serializable {
     private String ip;
     private int port;
 
