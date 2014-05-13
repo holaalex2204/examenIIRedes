@@ -33,4 +33,10 @@ public class Reconexion implements java.io.Serializable {
     public void setPort(int port) {
         this.port = port;
     }
+
+    @Override
+    public String toString() {
+        return "Reconexion{" + "ip=" + ip + ", port=" + port + '}';
+    }
+    
 }

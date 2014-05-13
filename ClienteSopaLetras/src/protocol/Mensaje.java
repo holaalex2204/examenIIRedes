@@ -34,6 +34,11 @@ public class Mensaje  implements java.io.Serializable{
     public void setContenido(String contenido) {
         this.contenido = contenido;
     }
+
+    @Override
+    public String toString() {
+        return "Mensaje{" + "tipo=" + tipo + ", contenido=" + contenido + '}';
+    }
     
     
 }

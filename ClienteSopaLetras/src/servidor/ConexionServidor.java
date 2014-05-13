@@ -5,6 +5,7 @@
  */
 package servidor;
 
+import clientesopaletras.ConexionCliente;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -43,66 +44,71 @@ public class ConexionServidor {
 
     public void empieza() {
         int aux = 0;
-        try {
-            Object obj;
-            Mensaje m = new Mensaje("", "");
-            do {
-                obj = entrada.readObject();
-                if (obj instanceof Mensaje) {
-                    m = (Mensaje) obj;
-                    System.out.println(cliente.getLocalAddress() + ":" + m.getTipo() + "->" + m.getContenido());
-                    if (m.getTipo().compareTo("Peticion") == 0 && m.getContenido().compareTo("Quiero jugar!!") == 0) {
-                        salida.writeObject(new Mensaje("Acepto", "Bienvenido"));
-                        salida.flush();
-                        System.out.println("Entrando a zona  de espera");
-                        //Comienza el periodo de espera
-                        while (edoEspera == true) {
-                            salida.writeObject(new Mensaje("Espera", aux + " cantidad de jugadores"));
-                            salida.flush();
-                            System.out.println("Envie un mensaje de espera");
-                            aux++;
-                            if (aux == 100) {
-                                edoEspera = false;                                
-                            }
+        Object obj;
+        Mensaje m = new Mensaje("", "");
+        do {
+            obj = lee();
+            if (obj instanceof Mensaje) {
+                m = (Mensaje) obj;                
+                if (m.getTipo().compareTo("Peticion") == 0 && m.getContenido().compareTo("Quiero jugar!!") == 0) {
+                    escribe(new Mensaje("Acepto", "Bienvenido"));                    
+                    //Comienza el periodo de espera
+                    escribe(new Mensaje("Espera", " cantidad de jugadores"));
+                    while (edoEspera == true) {                        
+                        aux++;
+                        if (aux == 10000) {
+                            edoEspera = false;
                         }
-                        //por alguna razon ya se tiene lista la sopa de letras y ya se puede comenzar a enviarla
-                        salida.writeObject(new Mensaje("Informacion", "Sopa de letras"));
-                        salida.flush();
-                        //Se supondra que ya se tiene una sopa de letras y para efectos practicos se deja una estática (desupés se hace el cambio)                        
-                        String []contenido = {"acasahjklñqwert","asdfghjklñqwert","asdfgholañqwerp","asdfghjklñqwero","asdfghjklñqwert","asdfgrodoñqwerp","asdfghjklñqwera","asdfghjklñqwerl","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñrwert","asdfghjklñqeert","asdfghjklñqwlrt","asdfghjklñqweot","asdfghjklñqwerj"};
-                        String []palabras = {"casa","hola","rodo","laptop","reloj"};
-                        salida.writeObject(new SopaLetras(palabras,contenido));
-                        salida.flush();
                     }
+                    //por alguna razon ya se tiene lista la sopa de letras y ya se puede comenzar a enviarla
+                    escribe(new Mensaje("Informacion", "Sopa de letras"));
+                    //Se supondra que ya se tiene una sopa de letras y para efectos practicos se deja una estática (desupés se hace el cambio)
+                    String []contenido = {"acasahjklñqwert","asdfghjklñqwert","asdfgholañqwerp","asdfghjklñqwero","asdfghjklñqwert","asdfgrodoñqwerp","asdfghjklñqwera","asdfghjklñqwerl","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñrwert","asdfghjklñqeert","asdfghjklñqwlrt","asdfghjklñqweot","asdfghjklñqwerj"};
+                    String []palabras = {"casa","hola","rodo","laptop","reloj"};
+                    escribe(new SopaLetras(palabras,contenido));
                 }
-            } while (m.getTipo().compareTo("Bye") != 0);
-        } catch (IOException ex) {
-            Logger.getLogger(ConexionServidor.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ConexionServidor.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            }
+        } while (m.getTipo().compareTo("Bye") != 0);
     }
 
     public void rechaza() {
-        try {
-            Object obj;
-            Mensaje m = new Mensaje("", "");
-            do {
-                obj = entrada.readObject();
-                if (obj instanceof Mensaje) {
-                    m = (Mensaje) obj;
-                    System.out.println(cliente.getLocalAddress() + ":" + m.getTipo() + "->" + m.getContenido());
-                    if (m.getTipo().compareTo("Peticion") == 0 && m.getContenido().compareTo("Quiero jugar!!") == 0) {
-                        salida.writeObject(new Reconexion("localhost", 6000));
-                        salida.flush();
-                    }
+        Object obj;
+        Mensaje m = new Mensaje("", "");
+        do {
+            obj = lee();
+            if (obj instanceof Mensaje) {
+                m = (Mensaje) obj;                
+                if (m.getTipo().compareTo("Peticion") == 0 && m.getContenido().compareTo("Quiero jugar!!") == 0) {
+                    escribe(new Reconexion("localhost", 6000));
                 }
-            } while (m.getTipo().compareTo("Bye") != 0);
+            }
+        } while (m.getTipo().compareTo("Bye") != 0);
+    }
+    public void escribe(Object obj)
+    {
+        try {            
+            salida.write(1);
+            salida.writeObject(obj);
+            salida.flush();
+            System.out.println("Servidor : " + cliente.getLocalAddress() + ":" + obj.toString());
         } catch (IOException ex) {
-            Logger.getLogger(ConexionServidor.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ConexionServidor.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConexionCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    public Object lee()
+    {
+        try {
+            //Se supone que el metodo read funcionara para bloquear el socket hasta que halla un bit que leer
+            entrada.read();
+            //Se manda un bit antes de cada dato para entonces indicar que a continuación viene el objeto que realmente interesa
+            Object a = entrada.readObject();
+            System.out.println(cliente.getLocalAddress() + ":"+a.toString());
+            return a;
+        } catch (IOException ex) {
+            Logger.getLogger(ConexionCliente.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ConexionCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }
