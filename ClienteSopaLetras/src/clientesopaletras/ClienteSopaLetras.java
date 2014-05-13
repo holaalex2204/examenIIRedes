@@ -39,20 +39,7 @@ public class ClienteSopaLetras {
     static Conexion conn = null;
 
     public static void main(String[] args) {
-        try {
-            System.out.println("Inicio de la peticion");            
-            Socket cliente = new Socket("localhost", 6000);
-            System.out.println("Se ha establecido la conexión");
-            ObjectOutputStream salida = new ObjectOutputStream(cliente.getOutputStream());            
-            System.out.println("Se hac reado fluojo de salida");
-            ObjectInputStream entrada = new ObjectInputStream(cliente.getInputStream());           
-            System.out.println("se ha crado flujo de entrada");
-            System.out.println("Creacion del cliente");
-            salida.writeObject(new Mensaje("Peticion", "Quiero jugar!!"));
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        ConexionCliente conCliente = new ConexionCliente("localhost", 6000);
 
         //CODIGO RODO***********************************************************
         //System.out.println(System.getProperty("user.dir"));

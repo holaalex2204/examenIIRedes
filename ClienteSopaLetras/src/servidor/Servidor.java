@@ -30,27 +30,13 @@ public class Servidor {
      */
     static Tablero tab = null;
 
-    public static void main(String[] args) {
-        try {
-            System.out.println("Se intenta levantar el servidor");
-            ServerSocket servidor = new ServerSocket(6000);
-            System.out.println("Esperando Petición");
-            Socket cliente = servidor.accept();
-            System.out.println("Conexión recibida");
-            ObjectInputStream entrada = new ObjectInputStream(cliente.getInputStream());
-            System.out.println("Se ha creado Flujo de entrad");
-            ObjectOutputStream salida = new ObjectOutputStream(cliente.getOutputStream());
-            System.out.println("Se ha creado flujo de salida");
-            System.out.println("Creacion del Socket");
-            Object obj = entrada.readObject();
-            if (obj instanceof Mensaje) {
-                Mensaje m = (Mensaje) obj;
-                System.out.println("Hemos recibido un mensaje!!");
-                System.out.println(cliente.getLocalAddress() + ":" + m.getTipo() + "->" + m.getContenido());
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+    public static void main(String[] args) throws IOException {
+        System.out.println("Se intenta levantar el servidor");
+        ServerSocket servidor = new ServerSocket(6000);
+        System.out.println("Esperando Petición");
+        Socket cliente = servidor.accept();
+        ConexionServidor con = new ConexionServidor(cliente);
+        con.empieza();
     }
     /*ServerSocket server = null;
      Socket client = null;
