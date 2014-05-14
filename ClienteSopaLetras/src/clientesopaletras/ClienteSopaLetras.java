@@ -41,7 +41,7 @@ public class ClienteSopaLetras {
     public static void main(String[] args) {
         ConexionCliente conCliente = new ConexionCliente("localhost", 6000);
         conCliente.juega();
-        conCliente.despedir();
+        //conCliente.despedir();
         //CODIGO RODO***********************************************************
         //System.out.println(System.getProperty("user.dir"));
         /*
