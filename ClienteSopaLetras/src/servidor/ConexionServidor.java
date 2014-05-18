@@ -10,8 +10,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mx.equipoMaravilla.examen2.client.event.PalabraEncontradaEvent;
+import mx.equipoMaravilla.examen2.client.event.PalabraEncontradaListener;
 import protocol.Mensaje;
 import protocol.Reconexion;
 import protocol.SopaLetras;
@@ -27,12 +30,14 @@ public class ConexionServidor extends Thread implements Runnable {
     ObjectOutputStream salida;
     public static boolean edoEspera = true;
     public boolean aceptar;
+    public boolean jugando;
+    private PalabraEncontradaListener listener;
+    ArrayList<PalabraEncontradaEvent> palabras;
 
     /**
      *
      * @param cliente
      */
-
     ConexionServidor(Socket cliente, boolean b) {
         super();
         try {
@@ -44,6 +49,8 @@ public class ConexionServidor extends Thread implements Runnable {
             System.out.println("Se ha creado flujo de salida");
             System.out.println("Creacion del Socket");
             this.aceptar = b;
+            jugando = false;
+            palabras = new ArrayList<PalabraEncontradaEvent>();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -56,26 +63,49 @@ public class ConexionServidor extends Thread implements Runnable {
         do {
             obj = lee();
             if (obj instanceof Mensaje) {
-                m = (Mensaje) obj;                
+                m = (Mensaje) obj;
                 if (m.getTipo().compareTo("Peticion") == 0 && m.getContenido().compareTo("Quiero jugar!!") == 0) {
-                    escribe(new Mensaje("Acepto", "Bienvenido"));                    
+                    escribe(new Mensaje("Acepto", "Bienvenido"));
                     //Comienza el periodo de espera
                     escribe(new Mensaje("Espera", " cantidad de jugadores"));
-                    while (edoEspera == true) {                        
+                    //por alguna razon ya se tiene lista la sopa de letras y ya se puede comenzar a enviarla
+                    escribe(new Mensaje("Informacion", "Sopa de letras"));
+                    //Se supondra que ya se tiene una sopa de letras y para efectos practicos se deja una estática (desupés se hace el cambio)
+                    String[] contenido = {"acasahjklñqwert", "asdfghjklñqwert", "asdfgholañqwerp", "asdfghjklñqwero", "asdfghjklñqwert", "asdfgrodoñqwerp", "asdfghjklñqwera", "asdfghjklñqwerl", "asdfghjklñqwert", "asdfghjklñqwert", "asdfghjklñrwert", "asdfghjklñqeert", "asdfghjklñqwlrt", "asdfghjklñqweot", "asdfghjklñqwerj"};
+                    String[] pals = {"casa", "hola", "rodo", "laptop", "reloj"};
+                    escribe(new SopaLetras(pals, contenido));
+                    //este periodo de espera será hasta que haya pocos jugadores
+                    while (edoEspera == true) {
                         aux++;
                         if (aux == 10000) {
                             edoEspera = false;
                         }
                     }
-                    //por alguna razon ya se tiene lista la sopa de letras y ya se puede comenzar a enviarla
-                    escribe(new Mensaje("Informacion", "Sopa de letras"));
-                    //Se supondra que ya se tiene una sopa de letras y para efectos practicos se deja una estática (desupés se hace el cambio)
-                    String []contenido = {"acasahjklñqwert","asdfghjklñqwert","asdfgholañqwerp","asdfghjklñqwero","asdfghjklñqwert","asdfgrodoñqwerp","asdfghjklñqwera","asdfghjklñqwerl","asdfghjklñqwert","asdfghjklñqwert","asdfghjklñrwert","asdfghjklñqeert","asdfghjklñqwlrt","asdfghjklñqweot","asdfghjklñqwerj"};
-                    String []palabras = {"casa","hola","rodo","laptop","reloj"};
-                    escribe(new SopaLetras(palabras,contenido));
+                    escribe(new Mensaje("Comencemos!!", "Ahora"));
+                    jugando = true;
+                    do {
+                        do {
+                            m = (Mensaje) lee();
+                            if (m.getTipo().compareTo("Encontre palabra") == 0) {
+                                //avisa al servidor que el cliente al que atiene encontro una palabra
+                                listener.handlePalabraEncontradaEvent(((PalabraEncontradaEvent) lee()));
+                            }
+                        } while ((m.getTipo().compareTo("Turno Escritura Servidor") != 0));
+                        while (palabras.size() > 0) {
+                            escribe(new Mensaje("Palabra encontrada", "nueva palabra"));
+                            escribe(palabras.get(0));
+                            palabras.remove(0);
+                        }
+                        escribe(new Mensaje("Turno Escritura Cliente", "Turno de escribir del cliente"));
+
+                    } while (jugando && m.getTipo().compareTo("Bye") != 0);
+                    if (m.getTipo().compareTo("Bye") != 0) {
+
+                    }
                 }
             }
         } while (m.getTipo().compareTo("Bye") != 0);
+        jugando = false;
     }
 
     public void rechaza() {
@@ -84,16 +114,16 @@ public class ConexionServidor extends Thread implements Runnable {
         do {
             obj = lee();
             if (obj instanceof Mensaje) {
-                m = (Mensaje) obj;                
+                m = (Mensaje) obj;
                 if (m.getTipo().compareTo("Peticion") == 0 && m.getContenido().compareTo("Quiero jugar!!") == 0) {
                     escribe(new Reconexion("localhost", 6000));
                 }
             }
         } while (m.getTipo().compareTo("Bye") != 0);
     }
-    public void escribe(Object obj)
-    {
-        try {            
+
+    public void escribe(Object obj) {
+        try {
             salida.write(1);
             salida.writeObject(obj);
             salida.flush();
@@ -102,8 +132,8 @@ public class ConexionServidor extends Thread implements Runnable {
             Logger.getLogger(ConexionCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public Object lee()
-    {
+
+    public Object lee() {
         try {
             //Se supone que el metodo read funcionara para bloquear el socket hasta que halla un bit que leer
             System.out.println("Esperando Bit de lectura para desbloquear");
@@ -111,7 +141,7 @@ public class ConexionServidor extends Thread implements Runnable {
             System.out.println("Esperando Objeto en el canal de lectura");
             //Se manda un bit antes de cada dato para entonces indicar que a continuación viene el objeto que realmente interesa
             Object a = entrada.readObject();
-            System.out.println(cliente.getLocalAddress() + ":"+a.toString());
+            System.out.println(cliente.getLocalAddress() + ":" + a.toString());
             return a;
         } catch (IOException ex) {
             Logger.getLogger(ConexionCliente.class.getName()).log(Level.SEVERE, null, ex);
@@ -123,15 +153,36 @@ public class ConexionServidor extends Thread implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Acabo de recibir a un amiguito!!");
-        if(aceptar)
-        {
-            empieza();            
-        }
-        else
-        {
-            rechaza();
+        try {
+            System.out.println("Acabo de recibir a un amiguito!!");
+            if (aceptar) {
+                empieza();
+            } else {
+                rechaza();
+            }
+            salida.close();
+            entrada.close();
+            cliente.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ConexionServidor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    public PalabraEncontradaListener getListener() {
+        return listener;
+    }
+
+    public void setListener(PalabraEncontradaListener listener) {
+        this.listener = listener;
+    }
+
+    private void encontrePalabra(PalabraEncontradaEvent a) {
+        listener.handlePalabraEncontradaEvent(a);
+    }
+
+    public void addPalabra(PalabraEncontradaEvent palabra) {
+        palabras.add(palabra);
+
+    }
+
 }

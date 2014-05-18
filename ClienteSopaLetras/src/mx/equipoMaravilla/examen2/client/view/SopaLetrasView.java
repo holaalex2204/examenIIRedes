@@ -13,19 +13,22 @@ import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import mx.equipoMaravilla.examen2.client.event.PalabraEncontradaEvent;
 import mx.equipoMaravilla.examen2.client.event.PalabraEncontradaListener;
 
 /**
  *
  * @author holaalex2204
  */
-public class SopaLetrasView extends JPanel {
+public class SopaLetrasView extends JPanel implements mx.equipoMaravilla.examen2.client.event.PalabraEncontradaListener{
     private String palabra = new String();
     private int encontrados[];
     private String palabras[];
-    private JLabel[][] sopita;
+    private JLabel[][] sopita;  
+    private ArrayList<JLabel> etiquetasPalabras;
     ArrayList<PalabraEncontradaListener> listeners = new ArrayList<PalabraEncontradaListener>();
     public SopaLetrasView(String contenido[], String palabras[]) {
         //Inicializa el panel que contiene la sopa de letras
@@ -37,6 +40,7 @@ public class SopaLetrasView extends JPanel {
         grid.setHgap(15);
         grid.setVgap(15);
         sopa.setLayout(grid);
+        etiquetasPalabras= new ArrayList<JLabel>();
         sopita = new JLabel[15][15];
         if (contenido.length != 15) {
             return;
@@ -83,7 +87,7 @@ public class SopaLetrasView extends JPanel {
         JPanel panelPalabras = new JPanel();
         panelPalabras.setLayout(new GridLayout(0, 3));
         JLabel titulo = new JLabel("SOPA LETRAS", JLabel.CENTER);
-        titulo.setFont(fuenteTitulo);
+        titulo.setFont(fuenteTitulo);        
         panelPalabras.add(new JLabel());
         panelPalabras.add(titulo);
         panelPalabras.add(new JLabel());
@@ -92,7 +96,8 @@ public class SopaLetrasView extends JPanel {
             aux.setFont(fuente);
             aux.setBackground(Color.white);
             aux.setOpaque(true);
-            panelPalabras.add(aux);
+            etiquetasPalabras.add(aux);
+            panelPalabras.add(etiquetasPalabras.get(i));
         }
         for (int i = 0; i < (3 - palabras.length % 3); i++) {
             JLabel aux = new JLabel();
@@ -141,23 +146,14 @@ public class SopaLetrasView extends JPanel {
                 cols = cols+1;
                 f++;
                 c++;      
-                /*System.out.println(filas);
-                System.out.println(f);
-                System.out.println(cols-c);
-                System.out.println(((float)palabra.length()-1)/2);
-                System.out.println();
-                System.out.println(cols);
-                System.out.println(c);
-                System.out.println(filas-f);
-                System.out.println(((float)palabra.length()-1)/2);
-                System.out.println();
-                System.out.println(filas-f);
-                System.out.println(cols-c);
-                        */
                 if(!(((filas == f  && (cols-c)==((float)palabra.length()-1)/2)| (cols==c && (filas-f)==((float)palabra.length()-1)/2))|(Math.abs(filas-f))==Math.abs(cols-c)))
                 {
                     break;
                 }
+                int filaInicial = 16;
+                int filaFinal =16;
+                int colInicial = 16;
+                int colFinal = -1;
                 for(int fila =0; fila<15; fila++)
                 {
                     for(int col = 0 ; col<15; col++)
@@ -165,9 +161,25 @@ public class SopaLetrasView extends JPanel {
                         if(sopita[fila][col].getBackground()== Color.red)
                         {                 
                             sopita[fila][col].setBackground(Color.green);
+                            if(colInicial>col)
+                            {
+                                filaInicial = fila;
+                                colInicial = col;
+                            }
+                            if(colFinal<=col)
+                            {
+                                colFinal = col;
+                                filaFinal = fila;
+                            }
                         }
                     }
                 }    
+                System.out.println("Encontraste una palabra!");
+                System.out.println(filaInicial);
+                System.out.println(filaFinal);
+                System.out.println(colFinal);
+                System.out.println(colInicial);
+                notificaPalabraEncontrada(new PalabraEncontradaEvent(filaInicial, filaFinal, colInicial, colFinal,palabras[i], this));
                 //AQUI TIENES QUE AVISAR QUE YA ENCONTRO UNA PALABRA
                 return;
             }
@@ -182,13 +194,52 @@ public class SopaLetrasView extends JPanel {
         }
         palabra = new String();
     }
-
+    private void notificaPalabraEncontrada(PalabraEncontradaEvent ev)
+    {
+        for(PalabraEncontradaListener lis : listeners)
+        {
+            lis.handlePalabraEncontradaEvent(ev);
+        }
+    }
     public ArrayList<PalabraEncontradaListener> getListeners() {
         return listeners;
     }
 
     public void addListeners(PalabraEncontradaListener listeners) {
         this.listeners.add(listeners);
+    }
+
+    @Override
+    public void handlePalabraEncontradaEvent(PalabraEncontradaEvent ev) {
+        Random r = new Random();
+        System.out.println("El servidor ha terminado de reportar a la vista de la palabra "+ ev.getPalabra());
+        Color colorAleatorio = new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
+        int difFilas = Math.round(((float)(ev.getFilaFin() - ev.getFilaInicio()))/ev.getPalabra().length());
+        int difCols = Math.round(((float)(ev.getColFinal() - ev.getColInicio()))/ev.getPalabra().length());
+        int fila, col;
+        System.out.println(ev.getPalabra().length());
+        System.out.println(ev.getColFinal());
+        System.out.println(ev.getColInicio());
+        System.out.println(ev.getFilaFin());
+        System.out.println(ev.getFilaInicio());
+        System.out.println("La diferencia de columnas es " + difCols);
+        System.out.println("La diferencia de FILAS es " + difFilas);
+        //Colorea en la sopa de letras la palabra encontrada si es que no ha sido coloreada
+        for(int i = 0 ; i<ev.getPalabra().length() ; i++)
+        {            
+            fila = (ev.getFilaInicio()+i*difFilas);
+            col  = (ev.getColInicio()+i*difCols);
+            System.out.println("Coloreando la celda " + fila + ","+ col);            
+            sopita[fila][col].setBackground(colorAleatorio);
+        }        
+        for(JLabel etiq : etiquetasPalabras)
+        {
+            if(etiq.getText().compareTo(ev.getPalabra())==0)
+            {
+                etiq.setBackground(colorAleatorio);
+            }
+        }
+        
     }
     
 }

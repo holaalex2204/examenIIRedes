@@ -39,7 +39,7 @@ public class ClienteSopaLetras {
     static Conexion conn = null;
 
     public static void main(String[] args) {
-        ConexionCliente conCliente = new ConexionCliente("localhost", 6002);
+        ConexionCliente conCliente = new ConexionCliente("localhost", 6000);
         conCliente.juega();
         //conCliente.despedir();
         //CODIGO RODO***********************************************************

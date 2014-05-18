@@ -10,6 +10,6 @@ package mx.equipoMaravilla.examen2.client.event;
  *
  * @author holaalex2204
  */
-public interface PalabraEncontradaListener {
+public interface PalabraEncontradaListener extends java.util.EventListener{
     public void handlePalabraEncontradaEvent(PalabraEncontradaEvent ev);
 }

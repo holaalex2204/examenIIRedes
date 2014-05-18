@@ -10,22 +10,35 @@ package mx.equipoMaravilla.examen2.client.event;
  *
  * @author holaalex2204
  */
-public class PalabraEncontradaEvent extends  java.util.EventObject {
+public class PalabraEncontradaEvent extends  java.util.EventObject implements java.io.Serializable {
     int filaInicio;
     int filaFin;
     int colInicio;
     int colFinal;
+    String palabra;
+    int tiempo;
+    
     public PalabraEncontradaEvent(Object source) {
         super(source);
     }
 
-    public PalabraEncontradaEvent(int filaInicio, int filaFin, int colInicio, int colFinal, Object source) {
+    public PalabraEncontradaEvent(int filaInicio, int filaFin, int colInicio, int colFinal, String palabra,Object source) {
         super(source);
         this.filaInicio = filaInicio;
         this.filaFin = filaFin;
         this.colInicio = colInicio;
         this.colFinal = colFinal;
+        this.palabra = palabra;
     }
+
+    public int getTiempo() {
+        return tiempo;
+    }
+
+    public void setTiempo(int tiempo) {
+        this.tiempo = tiempo;
+    }
+    
 
     public int getFilaInicio() {
         return filaInicio;
@@ -57,6 +70,14 @@ public class PalabraEncontradaEvent extends  java.util.EventObject {
 
     public void setColFinal(int colFinal) {
         this.colFinal = colFinal;
+    }
+
+    public String getPalabra() {
+        return palabra;
+    }
+
+    public void setPalabra(String palabra) {
+        this.palabra = palabra;
     }
     
     
