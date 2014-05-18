@@ -12,8 +12,10 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import mx.equipoMaravilla.examen2.client.event.PalabraEncontradaListener;
 
 /**
  *
@@ -24,6 +26,7 @@ public class SopaLetrasView extends JPanel {
     private int encontrados[];
     private String palabras[];
     private JLabel[][] sopita;
+    ArrayList<PalabraEncontradaListener> listeners = new ArrayList<PalabraEncontradaListener>();
     public SopaLetrasView(String contenido[], String palabras[]) {
         //Inicializa el panel que contiene la sopa de letras
         JPanel sopa = new JPanel();
@@ -179,4 +182,13 @@ public class SopaLetrasView extends JPanel {
         }
         palabra = new String();
     }
+
+    public ArrayList<PalabraEncontradaListener> getListeners() {
+        return listeners;
+    }
+
+    public void addListeners(PalabraEncontradaListener listeners) {
+        this.listeners.add(listeners);
+    }
+    
 }

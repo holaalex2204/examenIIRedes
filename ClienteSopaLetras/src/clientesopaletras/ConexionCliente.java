@@ -37,6 +37,7 @@ public class ConexionCliente {
                 System.out.println("Se ha establecido la conexión");
                 salida = new ObjectOutputStream(cliente.getOutputStream());
                 System.out.println("Se hac reado fluojo de salida");
+                System.out.println(cliente.getPort());
                 entrada = new ObjectInputStream(cliente.getInputStream());
                 System.out.println("se ha crado flujo de entrada");
                 System.out.println("Creacion del cliente");

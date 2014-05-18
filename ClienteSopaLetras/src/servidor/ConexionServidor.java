@@ -20,14 +20,21 @@ import protocol.SopaLetras;
  *
  * @author holaalex2204
  */
-public class ConexionServidor {
+public class ConexionServidor extends Thread implements Runnable {
 
     Socket cliente;
     ObjectInputStream entrada;
     ObjectOutputStream salida;
     public static boolean edoEspera = true;
+    public boolean aceptar;
 
-    public ConexionServidor(Socket cliente) {
+    /**
+     *
+     * @param cliente
+     */
+
+    ConexionServidor(Socket cliente, boolean b) {
+        super();
         try {
             this.cliente = cliente;
             System.out.println("Conexión recibida");
@@ -36,7 +43,7 @@ public class ConexionServidor {
             salida = new ObjectOutputStream(cliente.getOutputStream());
             System.out.println("Se ha creado flujo de salida");
             System.out.println("Creacion del Socket");
-
+            this.aceptar = b;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -99,7 +106,9 @@ public class ConexionServidor {
     {
         try {
             //Se supone que el metodo read funcionara para bloquear el socket hasta que halla un bit que leer
+            System.out.println("Esperando Bit de lectura para desbloquear");
             entrada.read();
+            System.out.println("Esperando Objeto en el canal de lectura");
             //Se manda un bit antes de cada dato para entonces indicar que a continuación viene el objeto que realmente interesa
             Object a = entrada.readObject();
             System.out.println(cliente.getLocalAddress() + ":"+a.toString());
@@ -111,4 +120,18 @@ public class ConexionServidor {
         }
         return null;
     }
+
+    @Override
+    public void run() {
+        System.out.println("Acabo de recibir a un amiguito!!");
+        if(aceptar)
+        {
+            empieza();            
+        }
+        else
+        {
+            rechaza();
+        }
+    }
+    
 }
