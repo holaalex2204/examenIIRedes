@@ -213,7 +213,12 @@ public class SopaLetrasView extends JPanel implements mx.equipoMaravilla.examen2
     public void handlePalabraEncontradaEvent(PalabraEncontradaEvent ev) {
         Random r = new Random();
         System.out.println("El servidor ha terminado de reportar a la vista de la palabra "+ ev.getPalabra());
-        Color colorAleatorio = new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
+        Color colorAleatorio ;
+        colorAleatorio = new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));        
+        do{ 
+            System.out.println(((colorAleatorio.getRed()+colorAleatorio.getBlue()+colorAleatorio.getGreen())/3));
+            colorAleatorio = colorAleatorio.brighter();            
+        }while(((colorAleatorio.getRed()+colorAleatorio.getBlue()+colorAleatorio.getGreen())/3) <= 140);
         int difFilas = Math.round(((float)(ev.getFilaFin() - ev.getFilaInicio()))/ev.getPalabra().length());
         int difCols = Math.round(((float)(ev.getColFinal() - ev.getColInicio()))/ev.getPalabra().length());
         int fila, col;

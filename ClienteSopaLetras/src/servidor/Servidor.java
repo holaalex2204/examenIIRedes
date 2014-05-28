@@ -12,6 +12,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import logica.ColocarPalabra;
+import logica.ManejoArchivos;
 import mx.equipoMaravilla.examen2.client.event.PalabraEncontradaEvent;
 import protocol.SopaLetras;
 
@@ -20,18 +22,20 @@ import protocol.SopaLetras;
  * @author holaalex2204
  */
 public class Servidor extends Thread implements mx.equipoMaravilla.examen2.client.event.PalabraEncontradaListener {
-
+    final int cantidadJugadores  = 2;
+    
     ServerSocket servidor;
     int port;
     SopaLetras sopa;
     ArrayList<ConexionServidor> jugadores;
-    public Servidor(int port) {
+    public Servidor(int port, SopaLetras sopa) {
         super();        
         try {
             this.port = port;
             System.out.println("Se intenta levantar el servidor en el puerto " + port);
             servidor = new ServerSocket(port);
             jugadores = new ArrayList<ConexionServidor>();
+            this.sopa = sopa;
         } catch (IOException ex) {
             ex.printStackTrace();
             System.out.println(port);
@@ -39,13 +43,23 @@ public class Servidor extends Thread implements mx.equipoMaravilla.examen2.clien
     }
     public void run()
     {
+        
         try {            
             while(true)
             {
+                
                 System.out.println("Esperando Petición");
                 Socket cliente = servidor.accept();
                 System.out.println("Recibi petición!!" + port);
-                ConexionServidor con = new ConexionServidor(cliente,true);            
+                ConexionServidor con;
+                if(jugadores.size()<cantidadJugadores)
+                {
+                    con = new ConexionServidor(cliente,true,sopa);
+                }
+                else
+                {
+                    con = new ConexionServidor(cliente,false,sopa);
+                }                
                 System.out.println("Ya establecí la conexión");
                 con.setListener(this);
                 con.start();

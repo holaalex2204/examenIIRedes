@@ -33,12 +33,13 @@ public class ConexionServidor extends Thread implements Runnable {
     public boolean jugando;
     private PalabraEncontradaListener listener;
     ArrayList<PalabraEncontradaEvent> palabras;
+    private SopaLetras sopa;
 
     /**
      *
      * @param cliente
      */
-    ConexionServidor(Socket cliente, boolean b) {
+    ConexionServidor(Socket cliente, boolean b, SopaLetras sopa) {
         super();
         try {
             this.cliente = cliente;
@@ -49,6 +50,7 @@ public class ConexionServidor extends Thread implements Runnable {
             System.out.println("Se ha creado flujo de salida");
             System.out.println("Creacion del Socket");
             this.aceptar = b;
+            this.sopa = sopa;
             jugando = false;
             palabras = new ArrayList<PalabraEncontradaEvent>();
         } catch (Exception ex) {
@@ -70,10 +72,8 @@ public class ConexionServidor extends Thread implements Runnable {
                     escribe(new Mensaje("Espera", " cantidad de jugadores"));
                     //por alguna razon ya se tiene lista la sopa de letras y ya se puede comenzar a enviarla
                     escribe(new Mensaje("Informacion", "Sopa de letras"));
-                    //Se supondra que ya se tiene una sopa de letras y para efectos practicos se deja una estática (desupés se hace el cambio)
-                    String[] contenido = {"acasahjklñqwert", "asdfghjklñqwert", "asdfgholañqwerp", "asdfghjklñqwero", "asdfghjklñqwert", "asdfgrodoñqwerp", "asdfghjklñqwera", "asdfghjklñqwerl", "asdfghjklñqwert", "asdfghjklñqwert", "asdfghjklñrwert", "asdfghjklñqeert", "asdfghjklñqwlrt", "asdfghjklñqweot", "asdfghjklñqwerj"};
-                    String[] pals = {"casa", "hola", "rodo", "laptop", "reloj"};
-                    escribe(new SopaLetras(pals, contenido));
+                    //Se supondra que ya se tiene una sopa de letras y para efectos practicos se deja una estática (desupés se hace el cambio)                    
+                    escribe(sopa);
                     //este periodo de espera será hasta que haya pocos jugadores
                     while (edoEspera == true) {
                         aux++;

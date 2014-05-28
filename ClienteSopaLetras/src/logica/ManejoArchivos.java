@@ -25,10 +25,8 @@ public class ManejoArchivos {
     public ManejoArchivos(){
         
         //Tamaño MAX de palabras en el archivo = 20
-        String palabrasT[] = new String[20];
-        
-        int x=0, t=0;
-        
+        String palabrasT[] = new String[20];        
+        int x=0, t=0;        
         String strLinea;
         try{
             // Abrimos el archivo
@@ -41,7 +39,7 @@ public class ManejoArchivos {
                 
             
             while ((strLinea = buffer.readLine()) != null)   {
-                //System.out.println(strLinea);
+                System.out.println(strLinea);
                 palabrasT[x]=strLinea;
                 x++;
             }

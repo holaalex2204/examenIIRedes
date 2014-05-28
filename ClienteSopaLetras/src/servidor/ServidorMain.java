@@ -17,7 +17,10 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import logica.ColocarPalabra;
+import logica.ManejoArchivos;
 import protocol.Mensaje;
+import protocol.SopaLetras;
 
 /**
  *
@@ -30,13 +33,20 @@ public class ServidorMain {
      * @param args the command line arguments
      */
     static Tablero tab = null;
-
+    final static  int cantColumnas = 15;
+    final static int cantFilas = 15;
     public static void main(String[] args) throws IOException {
+        //Comienza creando la sopa de letras que van a tener los servidores
+        tab = new Tablero(cantFilas, cantColumnas);
+        ManejoArchivos archivo = new ManejoArchivos();//palabrasR static
+        ColocarPalabra colocar = new ColocarPalabra();
+        tab.llenarTablero(cantFilas, cantColumnas);
+        SopaLetras sopa = new SopaLetras(ManejoArchivos.palabrasR,Tablero.cadenaR);
         //Arreglo para ir teniendo control sobre todos los arreglos que se van levantando para la ejecución del examén
         ArrayList<Servidor> servidores = new ArrayList<Servidor>();        
         for(int i = 6000; i<=6005; i++)
         {
-            servidores.add(new Servidor(i));                        
+            servidores.add(new Servidor(i,sopa));                        
         }
         for(Servidor s: servidores)
         {

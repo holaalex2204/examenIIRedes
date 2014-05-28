@@ -31,7 +31,8 @@ public class ConexionCliente implements PalabraEncontradaListener{
     ObjectInputStream entrada;
     PalabraEncontradaListener listener;
     ArrayList<PalabraEncontradaEvent> palabras;
-
+    final static int nfilas = 15;
+    final static int ncolumnas = 15;
     public ConexionCliente(String ip, int port) {
         Mensaje msj = new Mensaje("", "");
         Reconexion rec = new Reconexion(ip, port);

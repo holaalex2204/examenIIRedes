@@ -176,7 +176,7 @@ public class ColocarPalabra {
         int xOrientacion = 0;
         
         for (int z=0; z<palabrasR.length; z++){
-            //System.out.println("palabrasR.length " + palabrasR.length);
+            System.out.println(z);
             /*Números aleatorios del 1 al 15, para
                 - Posición posible para el tablero; y
                 - para forma (orientación).
