@@ -17,7 +17,7 @@ public class PalabraEncontradaEvent extends  java.util.EventObject implements ja
     int colFinal;
     String palabra;
     int tiempo;
-    
+    int id;
     public PalabraEncontradaEvent(Object source) {
         super(source);
     }
@@ -78,6 +78,14 @@ public class PalabraEncontradaEvent extends  java.util.EventObject implements ja
 
     public void setPalabra(String palabra) {
         this.palabra = palabra;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
     
     

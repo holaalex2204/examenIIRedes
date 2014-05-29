@@ -19,6 +19,7 @@ import mx.equipoMaravilla.examen2.client.view.SopaLetrasView;
 import protocol.Mensaje;
 import protocol.Reconexion;
 import protocol.SopaLetras;
+import protocol.Tiempo;
 
 /**
  *
@@ -103,14 +104,25 @@ public class ConexionCliente implements PalabraEncontradaListener{
                         }
                         escribe(new Mensaje("Turno Escritura Servidor", ""));
                         do
-                        {
+                        {                            
                             msj = (Mensaje) lee();
                             if(msj.getTipo().compareTo("Palabra encontrada")==0)
                             {
                                 vista.handlePalabraEncontradaEvent(((PalabraEncontradaEvent)lee()));
+                                vista.setMensajeGanador(((Mensaje) lee()).getContenido());
                             }
+                            else if(msj.getTipo().compareTo("Tiempo")==0)
+                            {
+                                vista.setTiempo((((Tiempo)lee()).getSegundos()));
+                            }
+                            else
+                            {
+                                
+                            }
+                         
                         }while(msj.getTipo().compareTo("Turno Escritura Cliente")!=0 && msj.getTipo().compareTo("Fin del juego")!=0);
                     } while (msj.getTipo().compareTo("Fin del juego") != 0);
+                    despedir();
                 }
             }
         } catch (Exception ev) {
@@ -164,6 +176,10 @@ public class ConexionCliente implements PalabraEncontradaListener{
         System.out.println("La vista me ha avisado que ha encontrado esta palabra");
         //Agrega la palabra a la lista de palabras encontradas que posteriormente se enviaran al servidor 
         palabras.add(ev);        
+    }
+
+    private void elseif(boolean b) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

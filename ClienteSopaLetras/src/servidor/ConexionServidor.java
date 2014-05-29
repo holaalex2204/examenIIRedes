@@ -15,15 +15,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import mx.equipoMaravilla.examen2.client.event.PalabraEncontradaEvent;
 import mx.equipoMaravilla.examen2.client.event.PalabraEncontradaListener;
+import mx.equipoMaravilla.examen2.client.event.TimerEvent;
+import mx.equipoMaravilla.examen2.client.event.TimerListener;
 import protocol.Mensaje;
 import protocol.Reconexion;
 import protocol.SopaLetras;
+import protocol.Tiempo;
 
 /**
  *
  * @author holaalex2204
  */
-public class ConexionServidor extends Thread implements Runnable {
+public class ConexionServidor extends Thread implements Runnable, TimerListener {
 
     Socket cliente;
     ObjectInputStream entrada;
@@ -33,14 +36,19 @@ public class ConexionServidor extends Thread implements Runnable {
     public boolean jugando;
     private PalabraEncontradaListener listener;
     ArrayList<PalabraEncontradaEvent> palabras;
+    ArrayList<PalabraEncontradaEvent> palabrasNotificadas;
+    String ganador;
+    boolean cambioPosicion;
     private SopaLetras sopa;
     private int portNext;
+    private int tiempo;
+    private int id;
     /**
      *
      * @param cliente
      */
     
-    ConexionServidor(Socket cliente, boolean b, SopaLetras sopa, int portNext) {
+    ConexionServidor(Socket cliente, boolean b, SopaLetras sopa, int portNext, int id) {
         super();
         try {
             this.cliente = cliente;
@@ -52,6 +60,7 @@ public class ConexionServidor extends Thread implements Runnable {
             System.out.println("Creacion del Socket");
             this.aceptar = b;
             this.sopa = sopa;
+            this.id = id; //Identificador que servirá para que sea la clave en el conteo de palabras del Servidor
             jugando = false;
             palabras = new ArrayList<PalabraEncontradaEvent>();
             this.portNext = portNext+1;
@@ -70,36 +79,50 @@ public class ConexionServidor extends Thread implements Runnable {
                 m = (Mensaje) obj;
                 if (m.getTipo().compareTo("Peticion") == 0 && m.getContenido().compareTo("Quiero jugar!!") == 0) {
                     escribe(new Mensaje("Acepto", "Bienvenido"));
-                    //Comienza el periodo de espera
-                    escribe(new Mensaje("Espera", " cantidad de jugadores"));
+                    //Comienza el periodo de espera                                        
+                    while (!jugando) {                            
+                        try {
+                            escribe(new Mensaje("Espera", " cantidad de jugadores"));
+                            Thread.sleep(1000); //duermete un rato mientras esperas a más jugadores
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(ConexionServidor.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
                     //por alguna razon ya se tiene lista la sopa de letras y ya se puede comenzar a enviarla
                     escribe(new Mensaje("Informacion", "Sopa de letras"));
                     //Se supondra que ya se tiene una sopa de letras y para efectos practicos se deja una estática (desupés se hace el cambio)                    
+                    
                     escribe(sopa);
                     //este periodo de espera será hasta que haya pocos jugadores
-                    while (edoEspera == true) {
-                        aux++;
-                        if (aux == 10000) {
-                            edoEspera = false;
-                        }
-                    }
-                    escribe(new Mensaje("Comencemos!!", "Ahora"));
-                    jugando = true;
+                    
+                    escribe(new Mensaje("Comencemos!!", "Ahora"));                    
                     do {
                         do {
                             m = (Mensaje) lee();
                             if (m.getTipo().compareTo("Encontre palabra") == 0) {
                                 //avisa al servidor que el cliente al que atiene encontro una palabra
-                                listener.handlePalabraEncontradaEvent(((PalabraEncontradaEvent) lee()));
+                                encontrePalabra(((PalabraEncontradaEvent) lee()));
                             }
-                        } while ((m.getTipo().compareTo("Turno Escritura Servidor") != 0));
-                        while (palabras.size() > 0) {
-                            escribe(new Mensaje("Palabra encontrada", "nueva palabra"));
-                            escribe(palabras.get(0));
-                            palabras.remove(0);
+                        } while ((m.getTipo().compareTo("Turno Escritura Servidor") != 0) && m.getTipo().compareTo("Bye") != 0);
+                        if (m.getTipo().compareTo("Bye") != 0) {
+                            while (palabras.size() > 0) {
+                                escribe(new Mensaje("Palabra encontrada", "nueva palabra"));
+                                escribe(palabras.get(0));
+                                escribe(new Mensaje("Mensaje Ganador",ganador));
+                                palabras.remove(0);
+                            }
+                            //Avisamos que enviaremos un objeto de tipo tiempo
+                            escribe(new Mensaje("Tiempo", "nueva palabra"));
+                            //Enviamos el tiempo actual
+                            escribe(new Tiempo(tiempo));
+                            if (tiempo == 0) {
+                                escribe(new Mensaje("Fin del juego", "nueva palabra"));
+                                jugando = false;
+                            } else {
+                                //El servidor no tiene màs que decir y le pasa el turno al servidor
+                                escribe(new Mensaje("Turno Escritura Cliente", "Turno de escribir del cliente"));
+                            }
                         }
-                        escribe(new Mensaje("Turno Escritura Cliente", "Turno de escribir del cliente"));
-
                     } while (jugando && m.getTipo().compareTo("Bye") != 0);
                     if (m.getTipo().compareTo("Bye") != 0) {
 
@@ -178,12 +201,26 @@ public class ConexionServidor extends Thread implements Runnable {
     }
 
     private void encontrePalabra(PalabraEncontradaEvent a) {
-        listener.handlePalabraEncontradaEvent(a);
+        a.setId(id);
+        System.out.println("HEEEEEEEEEEY!!!! El jugador con la id " + a.getId() + "ha encontrado una palabra!!");
+        listener.handlePalabraEncontradaEvent(a);        
     }
 
     public void addPalabra(PalabraEncontradaEvent palabra) {
         palabras.add(palabra);
+    }
 
+    @Override
+    public void handleTimeEvent(TimerEvent ev) {
+        tiempo = ev.getTiempo();
+    }
+
+    public int getIdGamer() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
 }

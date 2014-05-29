@@ -23,10 +23,14 @@ import protocol.SopaLetras;
  */
 public class Servidor extends Thread implements mx.equipoMaravilla.examen2.client.event.PalabraEncontradaListener {
     final int cantidadJugadores  = 2;
-    
+    final int duracionJuego = 300;//duración del juego en segudnos
+    Timer tiempo;
     ServerSocket servidor;
     int port;
-    SopaLetras sopa;
+    SopaLetras sopa;    
+    private int palabrasRestantes;
+    private int idJugadorGanador;
+    int contadorPalabras[] = new int[cantidadJugadores];
     ArrayList<ConexionServidor> jugadores;
     public Servidor(int port, SopaLetras sopa) {
         super();        
@@ -36,6 +40,7 @@ public class Servidor extends Thread implements mx.equipoMaravilla.examen2.clien
             servidor = new ServerSocket(port);
             jugadores = new ArrayList<ConexionServidor>();
             this.sopa = sopa;
+            palabrasRestantes = sopa.getPalabras().length;            
         } catch (IOException ex) {
             ex.printStackTrace();
             System.out.println(port);
@@ -43,7 +48,7 @@ public class Servidor extends Thread implements mx.equipoMaravilla.examen2.clien
     }
     public void run()
     {
-        
+        tiempo = new Timer(duracionJuego);
         try {            
             while(true)
             {
@@ -54,16 +59,47 @@ public class Servidor extends Thread implements mx.equipoMaravilla.examen2.clien
                 ConexionServidor con;
                 if(jugadores.size()<cantidadJugadores)
                 {
-                    con = new ConexionServidor(cliente,true,sopa,port);
+                    con = new ConexionServidor(cliente,true,sopa,port,jugadores.size());                    
                 }
                 else
                 {
-                    con = new ConexionServidor(cliente,false,sopa,port);
+                    con = new ConexionServidor(cliente,false,sopa,port,0);
                 }                
                 System.out.println("Ya establecí la conexión");
                 con.setListener(this);
                 con.start();
-                jugadores.add(con);
+                if(con.aceptar){
+                    //Agregamos al jugador a la lista de jugadores Activos unicamente si esta jugando
+                    jugadores.add(con);
+                    System.out.println("La cantidad de jugadores hasta el momento es de  " + jugadores.size());
+                    if(jugadores.size() == cantidadJugadores) //checamos si ya se alcanzaron la cantidad de jugadores deseados
+                    {
+                        //Inicializamos las condiciones de juego
+                        sopa = new SopaLetras(ManejoArchivos.palabrasR,Tablero.cadenaR);
+                        palabrasRestantes = sopa.getPalabras().length; 
+                        for(int i = 0 ; i<cantidadJugadores; i++){
+                            contadorPalabras[i] = 0;
+                        }
+                        tiempo.setSegundos(duracionJuego);
+                        tiempo.activo =true;
+                        for(ConexionServidor conServ: jugadores)
+                        {
+                            conServ.jugando = true;
+                            tiempo.addTimerListener(conServ);
+                        }
+                        tiempo.start();                        
+                    }
+                }
+                //Checa si ya termino el juego
+                if(!tiempo.activo && jugadores.size()==cantidadJugadores)
+                {
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    jugadores = new ArrayList<ConexionServidor>();
+                }
             }
         } catch (IOException ex) {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
@@ -72,16 +108,44 @@ public class Servidor extends Thread implements mx.equipoMaravilla.examen2.clien
 
     @Override
     public void handlePalabraEncontradaEvent(PalabraEncontradaEvent ev) {
-        //Temporalmente el tiempo es fijo, pero después ya será diferente
-        
-        ev.setTiempo(10);
+        palabrasRestantes--;                
+        if(palabrasRestantes==0)
+        {
+            tiempo.activo=false;
+            System.out.println("Han encontrado todas las palabras");
+        }
+        contadorPalabras[ev.getId()]++;
+        System.out.println("El jugador con id " + ev.getId() + "encontro una palabra");
+        if(ev.getId() != idJugadorGanador)
+        {
+            if(contadorPalabras[idJugadorGanador] < contadorPalabras[ev.getId()])
+            {
+                idJugadorGanador = ev.getId();
+            }
+        }
+        ev.setTiempo(tiempo.getSegundos());
         for(ConexionServidor con : jugadores)
         {            
             if(con.jugando)
-            {
+            {              
+                System.out.println("El id del jugador actual es " + con.getIdGamer());
+                System.out.println("El id del jugador que va ganando es  " + idJugadorGanador);
+                if(con.getIdGamer() == idJugadorGanador)
+                {
+                    con.ganador = "Sigue asi!! Vas ganando =D";
+                }
+                else
+                {
+                    int aux;
+                    aux = contadorPalabras[idJugadorGanador] +1;
+                    aux = aux - contadorPalabras[con.getIdGamer()];
+                    con.ganador = "Ya casi lo logras!! Estas a " ;                    
+                    con.ganador += aux ;
+                    con.ganador +=  " palabras de ganar! Apurale!!";
+                }
                 con.addPalabra(ev);
             }
-        }
+        }        
     }
     
 }

@@ -27,7 +27,9 @@ public class SopaLetrasView extends JPanel implements mx.equipoMaravilla.examen2
     private String palabra = new String();
     private int encontrados[];
     private String palabras[];
-    private JLabel[][] sopita;  
+    private JLabel[][] sopita;     
+    private JLabel tiempo;
+    private JLabel mensajeGanador;
     private ArrayList<JLabel> etiquetasPalabras;
     ArrayList<PalabraEncontradaListener> listeners = new ArrayList<PalabraEncontradaListener>();
     public SopaLetrasView(String contenido[], String palabras[]) {
@@ -106,12 +108,20 @@ public class SopaLetrasView extends JPanel implements mx.equipoMaravilla.examen2
             aux.setOpaque(true);
             panelPalabras.add(aux);
         }        
+        //Inicializa el panel que contiene tiempo y mensaje ganador
+        JPanel panelInformacion = new JPanel();
+        tiempo = new JLabel();
+        mensajeGanador  = new JLabel();
+        panelInformacion.add(tiempo);
+        panelInformacion.add(mensajeGanador);
         //Inicializa el panel principal que contiene todo
         BorderLayout border = new BorderLayout();
         setLayout(border);
         //sopa.setSize(500, 500);
         add(sopa, BorderLayout.CENTER);
         add(panelPalabras, BorderLayout.NORTH);
+        add(panelInformacion,BorderLayout.SOUTH);
+        
         encontrados = new int[palabras.length];
         this.palabras = palabras;
     }
@@ -243,8 +253,14 @@ public class SopaLetrasView extends JPanel implements mx.equipoMaravilla.examen2
             {
                 etiq.setBackground(colorAleatorio);
             }
-        }
-        
+        }    
+    }    
+    public void setTiempo(int tiempo) {
+        this.tiempo.setText(tiempo+" segundos restantes.");
+        System.out.println("El tiempo restante es de " + tiempo);
     }
-    
+    public void setMensajeGanador(String msj)
+    {
+        mensajeGanador.setText(msj);
+    }
 }
