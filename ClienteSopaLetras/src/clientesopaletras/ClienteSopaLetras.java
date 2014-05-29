@@ -33,8 +33,8 @@ public class ClienteSopaLetras {
      */
     static Tablero tab = null;
     static ManejoArchivos archivo = null;
-    public static int nfilas;
-    public static int ncolumnas;
+    public static int nfilas = 15;
+    public static int ncolumnas = 15;
     static ColocarPalabra colocar = null;
     static Conexion conn = null;
 

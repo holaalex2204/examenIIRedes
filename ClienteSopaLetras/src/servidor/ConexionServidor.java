@@ -34,12 +34,13 @@ public class ConexionServidor extends Thread implements Runnable {
     private PalabraEncontradaListener listener;
     ArrayList<PalabraEncontradaEvent> palabras;
     private SopaLetras sopa;
-
+    private int portNext;
     /**
      *
      * @param cliente
      */
-    ConexionServidor(Socket cliente, boolean b, SopaLetras sopa) {
+    
+    ConexionServidor(Socket cliente, boolean b, SopaLetras sopa, int portNext) {
         super();
         try {
             this.cliente = cliente;
@@ -53,6 +54,7 @@ public class ConexionServidor extends Thread implements Runnable {
             this.sopa = sopa;
             jugando = false;
             palabras = new ArrayList<PalabraEncontradaEvent>();
+            this.portNext = portNext+1;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -116,12 +118,11 @@ public class ConexionServidor extends Thread implements Runnable {
             if (obj instanceof Mensaje) {
                 m = (Mensaje) obj;
                 if (m.getTipo().compareTo("Peticion") == 0 && m.getContenido().compareTo("Quiero jugar!!") == 0) {
-                    escribe(new Reconexion("localhost", 6000));
+                    escribe(new Reconexion("localhost", portNext));
                 }
             }
         } while (m.getTipo().compareTo("Bye") != 0);
     }
-
     public void escribe(Object obj) {
         try {
             salida.write(1);

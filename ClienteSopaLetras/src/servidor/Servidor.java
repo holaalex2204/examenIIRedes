@@ -54,11 +54,11 @@ public class Servidor extends Thread implements mx.equipoMaravilla.examen2.clien
                 ConexionServidor con;
                 if(jugadores.size()<cantidadJugadores)
                 {
-                    con = new ConexionServidor(cliente,true,sopa);
+                    con = new ConexionServidor(cliente,true,sopa,port);
                 }
                 else
                 {
-                    con = new ConexionServidor(cliente,false,sopa);
+                    con = new ConexionServidor(cliente,false,sopa,port);
                 }                
                 System.out.println("Ya establecí la conexión");
                 con.setListener(this);
